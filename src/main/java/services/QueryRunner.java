@@ -10,6 +10,8 @@ public class QueryRunner {
 
     private final IQueryService queryService;
 
+    private int index = 0;
+
     public QueryRunner(IFileReader reader,
                        IQueryService qservice) {
         this.reader = reader;
@@ -23,9 +25,9 @@ public class QueryRunner {
 
         int total = names.size();
         queryService.reset();
+        index = 0;
 
         Command<Boolean> cmd = new Command<Boolean>() {
-            int index = -1;
 
             @Override
             public void exec(Boolean res) {
@@ -40,7 +42,7 @@ public class QueryRunner {
                 }
             }
         };
-        doQuery(names.get(0), cmd, cache);
+        doQuery(names.get(index), cmd, cache);
     }
 
     private void doQuery(String name, Command<Boolean> onComplete, boolean cache) {

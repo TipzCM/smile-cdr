@@ -24,7 +24,10 @@ public class FileReader implements IFileReader {
                 Scanner reader = new Scanner(file);
 
                 while (reader.hasNextLine()) {
-                    data.add(reader.nextLine());
+                    String line = reader.nextLine();
+                    if (line != null && !line.trim().equals("")) {
+                        data.add(line);
+                    }
                 }
             } catch (FileNotFoundException | URISyntaxException e) {
                 e.printStackTrace();

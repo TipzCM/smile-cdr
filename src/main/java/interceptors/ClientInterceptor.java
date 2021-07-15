@@ -13,11 +13,15 @@ public class ClientInterceptor implements ICustomClientInterceptor {
 
     @Override
     public void interceptRequest(IHttpRequest iHttpRequest) {
-        //System.out.println("Request " + iHttpRequest.getUri());
+        // System.out.println("Request " + iHttpRequest.getUri());
     }
 
     @Override
     public void interceptResponse(IHttpResponse iHttpResponse) throws IOException {
+        if (iHttpResponse.getAllHeaders().containsKey("content-location")) {
+            return;
+        }
+
         long ms = iHttpResponse.getRequestStopWatch().getMillis();
         iHttpResponse.getRequestStopWatch().endCurrentTask();
 
@@ -33,6 +37,7 @@ public class ClientInterceptor implements ICustomClientInterceptor {
 
     @Override
     public long getAverageResponseTime() {
+        System.out.println("Count is " + count);
         if (count > 0) {
             return cumulativeResponseTimes / count;
         }
