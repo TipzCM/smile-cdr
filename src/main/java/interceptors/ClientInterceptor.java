@@ -3,9 +3,11 @@ package interceptors;
 import ca.uhn.fhir.rest.client.api.IHttpRequest;
 import ca.uhn.fhir.rest.client.api.IHttpResponse;
 
-import java.io.IOException;
+import java.util.List;
 
 public class ClientInterceptor implements ICustomClientInterceptor {
+
+    private static final String XHEADERREQ = "X-Request-ID";
 
     private int count;
 
@@ -13,12 +15,13 @@ public class ClientInterceptor implements ICustomClientInterceptor {
 
     @Override
     public void interceptRequest(IHttpRequest iHttpRequest) {
-        // System.out.println("Request " + iHttpRequest.getUri());
+        iHttpRequest.addHeader(XHEADERREQ, iHttpRequest.getUri().contains("metadata") + "");
     }
 
     @Override
-    public void interceptResponse(IHttpResponse iHttpResponse) throws IOException {
-        if (iHttpResponse.getAllHeaders().containsKey("content-location")) {
+    public void interceptResponse(IHttpResponse iHttpResponse) {
+        List<String> reqId = iHttpResponse.getHeaders(XHEADERREQ);
+        if (reqId != null && reqId.contains("true")) {
             return;
         }
 
